@@ -1,8 +1,3 @@
-var JSZip = null
-if (typeof require === 'function') {
-	JSZip = require('node-zip');
-}
-
 //----------------------------------------------------------
 // Copyright (C) Microsoft Corporation. All rights reserved.
 // Released under the Microsoft Office Extensible File License
@@ -11,10 +6,17 @@ if (typeof require === 'function') {
 function xlsx(file) { 
 	'use strict'; // v2.3.0
 
+	var jszip;
+	if (typeof window === 'undefined') {
+		jszip = require('node-zip');
+	} else {
+		jszip = JSZip;
+	}
+
 	var defaultFontName = 'Calibri';
 	var defaultFontSize = 11;
 
-	var result, zip = new JSZip(), zipTime, processTime, s, f, i, j, k, l, t, w, sharedStrings, styles, index, data, val, style, borders, border, borderIndex, fonts, font, fontIndex,
+	var result, zip = new jszip(), zipTime, processTime, s, f, i, j, k, l, t, w, sharedStrings, styles, index, data, val, style, borders, border, borderIndex, fonts, font, fontIndex,
 		docProps, xl, xlWorksheets, worksheet, contentTypes = [[], []], props = [], xlRels = [], worksheets = [], id, columns, cols, colWidth, cell, row, merges, merged,
 		numFmts = ['General', '0', '0.00', '#,##0', '#,##0.00',,,,, '0%', '0.00%', '0.00E+00', '# ?/?', '# ??/??', 'mm-dd-yy', 'd-mmm-yy', 'd-mmm', 'mmm-yy', 'h:mm AM/PM', 'h:mm:ss AM/PM',
 			'h:mm', 'h:mm:ss', 'm/d/yy h:mm',,,,,,,,,,,,,,, '#,##0 ;(#,##0)', '#,##0 ;[Red](#,##0)', '#,##0.00;(#,##0.00)', '#,##0.00;[Red](#,##0.00)',,,,, 'mm:ss', '[h]:mm:ss', 'mmss.0', '##0.0E+0', '@'],
